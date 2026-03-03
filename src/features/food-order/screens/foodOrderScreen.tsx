@@ -20,7 +20,7 @@ export default function FoodOrderScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>หน้าสั่งอาหาร 🍔</Text>
-      <Text style={styles.subtitle}>ตอนนี้คุณอยู่ใน Feature: food-order แล้วครับ</Text>
+      <Text style={styles.subtitle}>ตอนนี้คุณอยู่ใน Feature: food-order</Text>
 
       <TouchableOpacity style={styles.button} onPress={onBackPress}>
         <Text style={styles.buttonText}>กลับหน้าหลัก</Text>
