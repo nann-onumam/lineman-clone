@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FOOTER_DATA } from '../data/menuData';
+import type { MenuItem } from '../types/MenuItem';
 import { typography } from '../../../shared/theme/typography';
 
 type BottomNavProps = {
@@ -10,7 +11,7 @@ type BottomNavProps = {
 export default function BottomNav({ onPressItem }: BottomNavProps) {
   return (
     <View style={styles.bottomNav}>
-      {FOOTER_DATA.map((item: { id: number; title: string; icon: string }) => (
+      {FOOTER_DATA.map((item: MenuItem) => (
         <TouchableOpacity key={item.id} onPress={() => onPressItem(item.title)}>
           <Text style={styles.footerText}>{item.icon} {item.title}</Text>
         </TouchableOpacity>

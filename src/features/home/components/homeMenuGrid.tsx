@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MENU_DATA } from '../data/menuData';
+import type { MenuItem } from '../types/MenuItem';
 import { spacing } from '../../../shared/theme/spacing';
 import { typography } from '../../../shared/theme/typography';
 
@@ -11,7 +12,7 @@ type HomeMenuGridProps = {
 export default function HomeMenuGrid({ onPressItem }: HomeMenuGridProps) {
   return (
     <View style={styles.gridMenu}>
-      {MENU_DATA.map((item: { id: number; title: string; icon: string }) => (
+      {MENU_DATA.map((item: MenuItem) => (
         <TouchableOpacity
           key={item.id}
           style={styles.menuBox}

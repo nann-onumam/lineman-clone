@@ -1,4 +1,3 @@
-// src/core/models/Menu.model.ts
 export interface MenuItem {
   id: number;
   title: string;

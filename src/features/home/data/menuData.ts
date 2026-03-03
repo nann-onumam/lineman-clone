@@ -1,10 +1,5 @@
 // src/features/home/data/menuData.ts
-
-export type MenuItem = {
-  id: number;
-  title: string;
-  icon: string;
-};
+import type { MenuItem } from '../types/MenuItem';
 
 export const MENU_DATA: MenuItem[] = [
   { id: 1, title: 'สั่งอาหาร', icon: '🍔' },
