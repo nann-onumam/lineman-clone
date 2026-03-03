@@ -60,7 +60,24 @@ export const styles = StyleSheet.create({
   dishRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: spacing.xs,
+  },
+  dishMetaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quantityBadge: {
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    marginRight: spacing.sm,
+  },
+  quantityText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.textInverse,
   },
   dishName: {
     fontSize: 12,

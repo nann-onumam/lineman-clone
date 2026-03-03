@@ -11,7 +11,6 @@
 export type RootStackParamList = {
   Home: undefined;
   FoodOrder: undefined;
-  FoodOrderSearch: undefined;
   MartOrder: undefined;
 };
 

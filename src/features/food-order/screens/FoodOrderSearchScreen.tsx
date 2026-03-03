@@ -13,24 +13,12 @@ import {
   ListRenderItemInfo,
   ActivityIndicator,
   Pressable,
-  TouchableOpacity,
 } from 'react-native';
-import type { StackNavigationProp } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../../core/navigation';
 import { useFoodRestaurants } from '../hooks/useFoodRestaurants';
 import { FoodRestaurantCard } from '../components/FoodRestaurantCard';
 import type { Restaurant } from '../types';
 import { styles } from './FoodOrderSearchScreen.styles';
 import { colors } from '../../../shared/theme/colors';
-
-type FoodOrderSearchScreenNavigationProps = StackNavigationProp<
-  RootStackParamList,
-  'FoodOrderSearch'
->;
-
-type FoodOrderSearchScreenProps = {
-  navigation: FoodOrderSearchScreenNavigationProps;
-};
 
 /**
  * Renders a full-screen restaurant search experience.
@@ -41,7 +29,7 @@ type FoodOrderSearchScreenProps = {
  * - Pagination spinner at bottom
  * - Empty state messaging
  */
-export const FoodOrderSearchScreen = ({ navigation }: FoodOrderSearchScreenProps) => {
+export const FoodOrderSearchScreen = () => {
   const {
     restaurants,
     isLoading,
@@ -74,20 +62,8 @@ export const FoodOrderSearchScreen = ({ navigation }: FoodOrderSearchScreenProps
     refetch();
   }, [refetch]);
 
-  /**
-   * Called when user presses back button.
-   */
-  const handleBackPress = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
-  /**
-   * Called when user presses on a restaurant card.
-   * Could navigate to restaurant detail screen.
-   */
-  const handleRestaurantPress = useCallback((restaurantId: string) => {
-    // TODO: navigate to restaurant detail or menu screen
-    console.log('Restaurant pressed:', restaurantId);
+  const handleSelectDish = useCallback(() => {
+    return;
   }, []);
 
   /**
@@ -146,10 +122,10 @@ export const FoodOrderSearchScreen = ({ navigation }: FoodOrderSearchScreenProps
     ({ item }: ListRenderItemInfo<Restaurant>) => (
       <FoodRestaurantCard
         restaurant={item}
-        onPress={handleRestaurantPress}
+        onDishPress={handleSelectDish}
       />
     ),
-    [handleRestaurantPress]
+    [handleSelectDish]
   );
 
   /**
@@ -186,15 +162,7 @@ export const FoodOrderSearchScreen = ({ navigation }: FoodOrderSearchScreenProps
    */
   return (
     <View style={styles.container}>
-      {/* Back Button */}
       <View style={styles.searchContainer}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleBackPress}
-        >
-          <Text style={styles.backButtonText}>← ย้อนกลับ</Text>
-        </TouchableOpacity>
-        
         {/* Search Input */}
         <TextInput
           style={styles.searchInput}

@@ -11,7 +11,8 @@ import { styles } from './FoodRestaurantCard.styles';
 
 export interface FoodRestaurantCardProps {
   restaurant: Restaurant;
-  onPress?: (restaurantId: string) => void;
+  onDishPress?: (dishId: string) => void;
+  getDishQuantity?: (dishId: string) => number;
 }
 
 /**
@@ -21,14 +22,15 @@ export interface FoodRestaurantCardProps {
  */
 const FoodRestaurantCardComponent = ({
   restaurant,
-  onPress,
+  onDishPress,
+  getDishQuantity,
 }: FoodRestaurantCardProps) => {
-  const handlePress = () => {
-    onPress?.(restaurant.id);
+  const handleDishPress = (dishId: string) => {
+    onDishPress?.(dishId);
   };
 
   return (
-    <Pressable onPress={handlePress} style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.nameText} numberOfLines={1}>
           {restaurant.name}
@@ -46,17 +48,32 @@ const FoodRestaurantCardComponent = ({
       {restaurant.signatureDishes.length > 0 && (
         <View>
           <Text style={styles.signatureDishesLabel}>Signature Dishes</Text>
-          {restaurant.signatureDishes.map((dish) => (
-            <View key={dish.id} style={styles.dishRow}>
-              <Text style={styles.dishName} numberOfLines={1}>
-                {dish.name}
-              </Text>
-              <Text style={styles.dishPrice}>฿{dish.priceTHB}</Text>
-            </View>
-          ))}
+          {restaurant.signatureDishes.map((dish) => {
+            const quantity = getDishQuantity?.(dish.id) ?? 0;
+
+            return (
+              <Pressable
+                key={dish.id}
+                onPress={() => handleDishPress(dish.id)}
+                style={styles.dishRow}
+              >
+                <Text style={styles.dishName} numberOfLines={1}>
+                  {dish.name}
+                </Text>
+                <View style={styles.dishMetaContainer}>
+                  {quantity > 0 && (
+                    <View style={styles.quantityBadge}>
+                      <Text style={styles.quantityText}>x{quantity}</Text>
+                    </View>
+                  )}
+                  <Text style={styles.dishPrice}>฿{dish.priceTHB}</Text>
+                </View>
+              </Pressable>
+            );
+          })}
         </View>
       )}
-    </Pressable>
+    </View>
   );
 };
 
@@ -68,7 +85,8 @@ export const FoodRestaurantCard = React.memo(
   (prevProps, nextProps) => {
     return (
       prevProps.restaurant.id === nextProps.restaurant.id &&
-      prevProps.onPress === nextProps.onPress
+      prevProps.onDishPress === nextProps.onDishPress &&
+      prevProps.getDishQuantity === nextProps.getDishQuantity
     );
   }
 );
