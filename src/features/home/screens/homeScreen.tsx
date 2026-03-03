@@ -1,23 +1,43 @@
-// src/features/home/screens/HomeScreen.tsx
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import AppLayout from '../../../shared/layouts/AppLayout';
-import { spacing } from '../../../shared/theme/spacing';
-import { typography } from '../../../shared/theme/typography';
 import useHomeNavigation from '../hooks/useHomeNavigation';
-import HomeMenuGrid from '../components/homeMenuGrid';
 import BottomNav from '../components/bottomNav';
+import HomeMenuGrid from '../components/homeMenuGrid';
+import HomeHeader from '../components/homeHeader';
+import NearbyMapCard from '../components/nearbyMapCard';
+import useDebouncedKeyword from '../hooks/useDebouncedKeyword';
+import useHomeLocationQuery from '../hooks/useHomeLocationQuery';
 
-export default function HomeScreen({ navigation }: any) {
+type HomeScreenProps = {
+  navigation: {
+    navigate: (screen: string) => void;
+  };
+};
+
+export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { onMenuPress, onFooterPress } = useHomeNavigation(navigation);
+
+  const { keyword, setKeyword, debouncedKeyword } = useDebouncedKeyword(400);
+  const { data: locations = [], isLoading, isFetching } = useHomeLocationQuery(debouncedKeyword);
 
   return (
     <AppLayout style={styles.container}>
       <ScrollView>
-        <View style={styles.headerArea}>
-          <Text style={styles.headerText}>📍 รีเจ้นท์ พัฒนาการ...</Text>
-        </View>
+        <HomeHeader
+          selectedLocation={locations[0]}
+          searchKeyword={keyword}
+          onChangeKeyword={setKeyword}
+        />
 
+        {(isLoading || isFetching) && (
+          <View style={styles.loadingArea}>
+            <ActivityIndicator color="#00c300" />
+            <Text style={styles.loadingText}>กำลังอัปเดตพื้นที่ให้บริการ...</Text>
+          </View>
+        )}
+
+        <NearbyMapCard locations={locations} />
         <HomeMenuGrid onPressItem={onMenuPress} />
       </ScrollView>
 
@@ -26,19 +46,16 @@ export default function HomeScreen({ navigation }: any) {
   );
 }
 
-// ย้าย styles มาไว้ท้ายไฟล์นี้ด้วยครับ
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
-  headerArea: {
-    backgroundColor: '#00c300',
-    height: 180,
-    paddingTop: spacing.lg + spacing.xs,
-    paddingHorizontal: spacing.lg + spacing.xs,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
+  loadingArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
   },
-  headerText: {
-    color: 'white',
-    ...typography.heading,
+  loadingText: {
+    marginLeft: 8,
+    color: '#4b5563',
   },
 });
