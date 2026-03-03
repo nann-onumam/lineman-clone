@@ -23,16 +23,16 @@ describe('useHomeNavigation', () => {
     expect(Alert.alert).not.toHaveBeenCalled();
   });
 
-  it('shows alert with title when menu id is not 1', () => {
+  it('navigates to MartOrder when menu id is 2', () => {
     const { onMenuPress } = useHomeNavigation({ navigate: mockNavigate });
 
     onMenuPress(2, 'มาร์ท');
 
-    expect(mockNavigate).not.toHaveBeenCalled();
-    expect(Alert.alert).toHaveBeenCalledWith('มาร์ท');
+    expect(mockNavigate).toHaveBeenCalledWith('MartOrder');
+    expect(Alert.alert).not.toHaveBeenCalled();
   });
 
-  it('shows alert with footer title on footer press', () => {
+  it('shows alert with title when menu id is not routed', () => {
     const { onFooterPress } = useHomeNavigation({ navigate: mockNavigate });
 
     onFooterPress('บัญชี');

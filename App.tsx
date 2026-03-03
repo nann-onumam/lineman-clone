@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { RootStackParamList } from './src/core/navigation';
 import { HomeScreen } from './src/features/home';
 import { FoodOrderScreen } from './src/features/food-order';
+import MartOrderScreen from './src/features/mart-order/screens/martOrderScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -19,6 +20,11 @@ export default function App() {
             name="FoodOrder"
             component={FoodOrderScreen}
             options={{ headerShown: true, title: 'สั่งอาหาร' }}
+          />
+          <Stack.Screen
+            name="MartOrder"
+            component={MartOrderScreen}
+            options={{ headerShown: true, title: 'สั่งของ' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

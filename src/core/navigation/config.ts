@@ -12,7 +12,7 @@ import type { RootNavigationRoute } from './types';
  */
 export const MENU_ROUTE_MAP: Record<number, RootNavigationRoute | null> = {
   1: 'FoodOrder',     // สั่งอาหาร (Food Order)
-  2: null,            // สั่งของ (Mart Order) - TBD
+  2: 'MartOrder',     // สั่งของ (Mart Order) - Placeholder, not yet implemented
   3: null,            // เรียกรถ (Ride) - TBD
   4: null,            // ปรึกษาเภสัช (Pharmacy) - TBD
   5: null,            // เมสเซนเจอร์ (Messenger) - TBD
