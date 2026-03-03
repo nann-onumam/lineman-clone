@@ -1,0 +1,23 @@
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { FOOTER_DATA } from '../../../shared/constants/MenuData';
+
+type BottomNavProps = {
+  onPressItem: (title: string) => void;
+};
+
+export default function BottomNav({ onPressItem }: BottomNavProps) {
+  return (
+    <View style={styles.bottomNav}>
+      {FOOTER_DATA.map((item) => (
+        <TouchableOpacity key={item.id} onPress={() => onPressItem(item.title)}>
+          <Text>{item.icon} {item.title}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  bottomNav: { flexDirection: 'row', height: 70, backgroundColor: 'white', justifyContent: 'space-around', alignItems: 'center', borderTopWidth: 1, borderColor: '#e0e0e0' },
+});
