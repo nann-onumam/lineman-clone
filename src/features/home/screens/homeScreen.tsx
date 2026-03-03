@@ -1,12 +1,12 @@
 // src/features/home/screens/HomeScreen.tsx
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { MENU_DATA, FOOTER_DATA } from '../../../shared/constants/MenuData';
+import AppLayout from '../../../shared/layouts/AppLayout';
 
 export default function HomeScreen({ navigation }: any) {
   return (
-    <SafeAreaView style={styles.container}>
+    <AppLayout style={styles.container}>
       <ScrollView>
         <View style={styles.headerArea}>
           <Text style={styles.headerText}>📍 รีเจ้นท์ พัฒนาการ...</Text>
@@ -32,7 +32,7 @@ export default function HomeScreen({ navigation }: any) {
           </TouchableOpacity>
         ))}
       </View>
-    </SafeAreaView>
+    </AppLayout>
   );
 }
 

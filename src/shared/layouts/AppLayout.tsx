@@ -1,12 +1,16 @@
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors } from '../theme/colors';
 import { spacing } from '../theme/spacing';
 
-export default function AppLayout({ children }: PropsWithChildren) {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+type AppLayoutProps = PropsWithChildren<{
+  style?: StyleProp<ViewStyle>;
+}>;
+
+export default function AppLayout({ children, style }: AppLayoutProps) {
+  return <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
