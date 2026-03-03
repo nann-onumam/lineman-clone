@@ -1,29 +1,23 @@
 export const typography = {
-  fontFamily: {
-    regular: 'System',
-    medium: 'System',
-    bold: 'System',
+  heading: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '700',
   },
-  fontSize: {
-    xs: 12,
-    sm: 14,
-    md: 16,
-    lg: 20,
-    xl: 24,
-    xxl: 32,
+  subheading: {
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: '600',
   },
-  lineHeight: {
-    xs: 16,
-    sm: 20,
-    md: 24,
-    lg: 28,
-    xl: 32,
-    xxl: 40,
+  body: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '400',
   },
-  fontWeight: {
-    regular: '400',
-    medium: '500',
-    bold: '700',
+  caption: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '400',
   },
 } as const;
 

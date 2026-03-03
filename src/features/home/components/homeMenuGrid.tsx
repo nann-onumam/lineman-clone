@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MENU_DATA } from '../../../shared/constants/MenuData';
 import { spacing } from '../../../shared/theme/spacing';
+import { typography } from '../../../shared/theme/typography';
 
 type HomeMenuGridProps = {
   onPressItem: (itemId: number, title: string) => void;
@@ -16,7 +17,7 @@ export default function HomeMenuGrid({ onPressItem }: HomeMenuGridProps) {
           style={styles.menuBox}
           onPress={() => onPressItem(item.id, item.title)}
         >
-          <Text>{item.icon} {item.title}</Text>
+          <Text style={styles.menuText}>{item.icon} {item.title}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -40,5 +41,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2,
+  },
+  menuText: {
+    ...typography.body,
   },
 });

@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import AppLayout from '../../../shared/layouts/AppLayout';
 import { spacing } from '../../../shared/theme/spacing';
+import { typography } from '../../../shared/theme/typography';
 import useHomeNavigation from '../hooks/useHomeNavigation';
 import HomeMenuGrid from '../components/homeMenuGrid';
 import BottomNav from '../components/bottomNav';
@@ -36,5 +37,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
-  headerText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
+  headerText: {
+    color: 'white',
+    ...typography.heading,
+  },
 });
