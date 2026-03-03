@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import AppLayout from '../../../shared/layouts/AppLayout';
+import { spacing } from '../../../shared/theme/spacing';
 import useHomeNavigation from '../hooks/useHomeNavigation';
 import HomeMenuGrid from '../components/homeMenuGrid';
 import BottomNav from '../components/bottomNav';
@@ -27,6 +28,13 @@ export default function HomeScreen({ navigation }: any) {
 // ย้าย styles มาไว้ท้ายไฟล์นี้ด้วยครับ
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
-  headerArea: { backgroundColor: '#00c300', height: 180, paddingTop: 20, paddingHorizontal: 20, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 },
+  headerArea: {
+    backgroundColor: '#00c300',
+    height: 180,
+    paddingTop: spacing.lg + spacing.xs,
+    paddingHorizontal: spacing.lg + spacing.xs,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+  },
   headerText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 });
