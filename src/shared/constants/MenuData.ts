@@ -1,5 +1,10 @@
 // src/shared/constants/MenuData.ts
-import { MenuItem } from '../../core/models/Menu.model';
+
+export type MenuItem = {
+  id: number;
+  title: string;
+  icon: string;
+};
 
 export const MENU_DATA: MenuItem[] = [
   { id: 1, title: 'สั่งอาหาร', icon: '🍔' },
