@@ -13,12 +13,24 @@ import {
   ListRenderItemInfo,
   ActivityIndicator,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { RootStackParamList } from '../../../core/navigation';
 import { useFoodRestaurants } from '../hooks/useFoodRestaurants';
 import { FoodRestaurantCard } from '../components/FoodRestaurantCard';
 import type { Restaurant } from '../types';
 import { styles } from './FoodOrderSearchScreen.styles';
 import { colors } from '../../../shared/theme/colors';
+
+type FoodOrderSearchScreenNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  'FoodOrderSearch'
+>;
+
+type FoodOrderSearchScreenProps = {
+  navigation: FoodOrderSearchScreenNavigationProps;
+};
 
 /**
  * Renders a full-screen restaurant search experience.
@@ -29,7 +41,7 @@ import { colors } from '../../../shared/theme/colors';
  * - Pagination spinner at bottom
  * - Empty state messaging
  */
-export const FoodOrderSearchScreen = () => {
+export const FoodOrderSearchScreen = ({ navigation }: FoodOrderSearchScreenProps) => {
   const {
     restaurants,
     isLoading,
@@ -61,6 +73,13 @@ export const FoodOrderSearchScreen = () => {
   const handleRetry = useCallback(() => {
     refetch();
   }, [refetch]);
+
+  /**
+   * Called when user presses back button.
+   */
+  const handleBackPress = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   /**
    * Called when user presses on a restaurant card.
@@ -167,8 +186,16 @@ export const FoodOrderSearchScreen = () => {
    */
   return (
     <View style={styles.container}>
-      {/* Search Input */}
+      {/* Back Button */}
       <View style={styles.searchContainer}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={handleBackPress}
+        >
+          <Text style={styles.backButtonText}>← ย้อนกลับ</Text>
+        </TouchableOpacity>
+        
+        {/* Search Input */}
         <TextInput
           style={styles.searchInput}
           placeholder="Search restaurants or cuisine..."

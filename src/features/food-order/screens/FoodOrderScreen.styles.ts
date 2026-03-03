@@ -32,6 +32,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: 25,
   },
+  secondaryButton: {
+    backgroundColor: colors.primary || '#00c300',
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 25,
+    marginTop: spacing.md,
+  },
   buttonText: {
     color: colors.background || '#fff',
     ...typography.body,

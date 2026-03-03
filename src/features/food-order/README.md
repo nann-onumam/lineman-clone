@@ -2,35 +2,59 @@
 
 ## Feature Responsibility
 - Owns the food ordering domain with complete business logic isolation.
-- Manages menu items, shopping cart, orders, and order submission.
+- Manages restaurant search, menu browsing, shopping cart, and order submission.
 - Provides type-safe composition screens without business logic.
-- Implements all food ordering workflows with clear separation of concerns.
+- Implements complete food ordering workflow with clear separation of concerns.
 
 ## Folder Structure
 
 ```
 food-order/
 ├── screens/
-│   ├── FoodOrderScreen.tsx              # Composition-only screen
-│   └── FoodOrderScreen.styles.ts        # Extracted styles
+│   ├── FoodOrderScreen.tsx              # Landing screen with navigation to search
+│   ├── FoodOrderScreen.styles.ts        # Styles for landing screen
+│   ├── FoodOrderSearchScreen.tsx        # Restaurant search & browse screen
+│   ├── FoodOrderSearchScreen.styles.ts  # Styles for search screen
+│   └── index.ts                         # Internal screen exports
 ├── components/
-│   ├── index.ts                         # Internal component exports
-│   └── (future: MenuItem, CartItem, CartSummary, etc.)
+│   ├── FoodRestaurantCard.tsx           # Restaurant display card
+│   ├── FoodRestaurantCard.styles.ts     # Restaurant card styles
+│   ├── OrderSummaryCard.tsx             # Order pricing breakdown card
+│   ├── OrderSummaryCard.styles.ts       # Order summary styles
+│   └── index.ts                         # Internal component exports
 ├── hooks/
-│   ├── useFoodOrderNavigation.ts        # Navigation callbacks wrapper
+│   ├── useFoodOrderNavigation.ts        # Navigation callbacks for FoodOrder
+│   ├── useFoodRestaurants.ts            # Restaurant search with debounce & pagination
+│   ├── useOrderPricing.ts               # Cart pricing calculation
 │   ├── index.ts                         # Internal hooks export
 │   └── __tests__/
 │       └── useFoodOrderNavigation.test.ts
 ├── services/
-│   ├── orderService.ts                  # Order business logic (create, submit, validate)
-│   ├── menuService.ts                   # Menu business logic (search, filter, sort)
+│   ├── foodRestaurantService.ts         # Restaurant search & pagination logic
+│   ├── orderPricingService.ts           # Pricing calculation & discount rules
 │   └── index.ts                         # Internal service exports
 ├── data/
-│   ├── menuConfig.ts                    # Static menu data and constants
+│   ├── mockRestaurants.ts               # Mock restaurant & dish data
 │   └── index.ts                         # Internal data exports
 ├── types.ts                             # Feature-specific types (single file)
 ├── index.ts                             # Public API export
 └── README.md                            # This file
+```
+
+## Screen Flow
+
+```
+Home Screen
+    ↓ (tap "สั่งอาหาร")
+FoodOrderScreen (Landing)
+  ├─ Button: "ไปหน้าค้นหาร้าน" → FoodOrderSearchScreen
+  └─ Button: "กลับหน้าหลัก" → Home Screen
+    ↓
+FoodOrderSearchScreen (Search & Browse)
+  ├─ Search input with debounce (500ms)
+  ├─ Restaurant list with pagination
+  ├─ Back button → FoodOrderScreen
+  └─ (Future: Restaurant card tap → Menu/Detail screen)
 ```
 
 ## Public API
@@ -55,12 +79,30 @@ export type {
 ## Internal Modules
 
 ### screens/FoodOrderScreen.tsx
-- **Responsibility**: Composition-only screen that displays food ordering UI.
-- **Input**: Uses `useFoodOrderNavigation()` hook to get navigation callbacks.
-- **Output**: React Native View tree with title, subtitle, and back button.
+- **Responsibility**: Landing screen for food ordering feature with navigation options.
+- **Input**: Receives `navigation` prop from stack navigator.
+- **Output**: React Native View with title, navigation buttons.
+- **Navigation**: 
+  - "ไปหน้าค้นหาร้าน" → navigates to FoodOrderSearch
+  - "กลับหน้าหลัก" → uses `useFoodOrderNavigation()` hook to go back
 - **Styling**: Imports styles from `FoodOrderScreen.styles.ts`.
-- **No Direct Dependencies**: Does not receive navigation object; uses callbacks only.
-- **No Business Logic**: All business logic is in services, hooks, or data layer.
+- **No Business Logic**: Pure composition screen.
+
+### screens/FoodOrderSearchScreen.tsx
+- **Responsibility**: Restaurant search and browsing with pagination.
+- **Input**: Receives `navigation` prop from stack navigator.
+- **Features**:
+  - Search input with 500ms debounce
+  - Restaurant list with FlatList
+  - Manual pagination (load more)
+  - Loading states (initial + pagination)
+  - Error state with retry
+  - Empty states
+  - Back button to FoodOrder screen
+- **Hooks**: Uses `useFoodRestaurants()` for data fetching
+- **Components**: Renders `FoodRestaurantCard` for each restaurant
+- **Styling**: Imports styles from `FoodOrderSearchScreen.styles.ts`.
+- **No Business Logic**: All logic in hooks and services.
 
 ### screens/FoodOrderScreen.styles.ts
 - **Responsibility**: Extracted StyleSheet for FoodOrderScreen.

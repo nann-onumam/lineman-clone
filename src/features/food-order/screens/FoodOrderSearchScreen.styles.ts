@@ -14,6 +14,15 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  backButton: {
+    paddingVertical: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  backButtonText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: '600',
+  },
   searchInput: {
     backgroundColor: colors.background,
     borderRadius: 8,
