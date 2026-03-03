@@ -10,6 +10,7 @@ export {
   generateOrderId,
   createOrder,
   submitOrder,
+  calculateCartTotalFromDishes,
 } from './orderService';
 
 export {
@@ -18,3 +19,25 @@ export {
   sortMenuItems,
   findMenuItemById,
 } from './menuService';
+
+export {
+  searchRestaurants,
+  getAllRestaurants,
+  getRestaurantById,
+  searchRestaurantsAsync,
+  getAllRestaurantsAsync,
+  type RestaurantSearchResult,
+  type PaginationMeta,
+} from './foodRestaurantService';
+
+export {
+  calculateDiscount,
+  calculateOrderSummary,
+  formatPrice,
+  hasDiscount,
+  calculateSavings,
+  isValidOrderAmount,
+  DELIVERY_FEE_THB,
+  DISCOUNT_THRESHOLD_THB,
+  DISCOUNT_PERCENTAGE,
+} from './orderPricingService';
