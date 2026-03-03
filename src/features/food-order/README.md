@@ -1,30 +1,36 @@
 # food-order Feature
 
 ## Feature Responsibility
-- Owns the food ordering screen and domain-specific business logic.
-- Manages food menu items, shopping cart, and order state.
-- Provides type-safe navigation callbacks without exposing navigation details.
-- Implements all food ordering workflows in isolation.
+- Owns the food ordering domain with complete business logic isolation.
+- Manages menu items, shopping cart, orders, and order submission.
+- Provides type-safe composition screens without business logic.
+- Implements all food ordering workflows with clear separation of concerns.
 
 ## Folder Structure
 
 ```
 food-order/
 ├── screens/
-│   ├── FoodOrderScreen.tsx          # Main composition screen
-│   └── FoodOrderScreen.styles.ts    # Extracted styles
-├── components/                       # UI components (future)
-│   └── (empty - add food-specific UI components here)
+│   ├── FoodOrderScreen.tsx              # Composition-only screen
+│   └── FoodOrderScreen.styles.ts        # Extracted styles
+├── components/
+│   ├── index.ts                         # Internal component exports
+│   └── (future: MenuItem, CartItem, CartSummary, etc.)
 ├── hooks/
-│   ├── useFoodOrderNavigation.ts     # Navigation callback wrapper
-│   ├── index.ts                      # Internal hooks export
+│   ├── useFoodOrderNavigation.ts        # Navigation callbacks wrapper
+│   ├── index.ts                         # Internal hooks export
 │   └── __tests__/
 │       └── useFoodOrderNavigation.test.ts
-├── data/                             # Feature data and constants
-│   └── (empty - add MENU_DATA, ORDER_CONFIG, etc. here)
-├── types.ts                          # Feature-specific types (single file)
-├── index.ts                          # Public API export
-└── README.md                         # This file
+├── services/
+│   ├── orderService.ts                  # Order business logic (create, submit, validate)
+│   ├── menuService.ts                   # Menu business logic (search, filter, sort)
+│   └── index.ts                         # Internal service exports
+├── data/
+│   ├── menuConfig.ts                    # Static menu data and constants
+│   └── index.ts                         # Internal data exports
+├── types.ts                             # Feature-specific types (single file)
+├── index.ts                             # Public API export
+└── README.md                            # This file
 ```
 
 ## Public API
@@ -54,6 +60,13 @@ export type {
 - **Output**: React Native View tree with title, subtitle, and back button.
 - **Styling**: Imports styles from `FoodOrderScreen.styles.ts`.
 - **No Direct Dependencies**: Does not receive navigation object; uses callbacks only.
+- **No Business Logic**: All business logic is in services, hooks, or data layer.
+
+### screens/FoodOrderScreen.styles.ts
+- **Responsibility**: Extracted StyleSheet for FoodOrderScreen.
+- **Exports**: Named `styles` object with container, title, subtitle, button, buttonText.
+- **Theme Access**: Uses `shared/theme/colors`, `spacing`, `typography`.
+- **No Hardcoding**: All colors, sizes, and spacing come from shared theme.
 
 ### hooks/useFoodOrderNavigation.ts
 - **Responsibility**: Encapsulates navigation logic for food order screens.
@@ -62,27 +75,62 @@ export type {
 - **Type Safety**: Uses `RootStackParamList` from core navigation.
 - **Testable**: Can be tested without rendering UI components.
 
-### screens/FoodOrderScreen.styles.ts
-- **Responsibility**: Extracted StyleSheet for FoodOrderScreen.
-- **Exports**: Named `styles` object with container, title, subtitle, button, buttonText.
-- **Theme Access**: Uses `shared/theme/colors`, `spacing`, `typography`.
-- **No Hardcoding**: All colors, sizes, and spacing come from shared theme.
+### services/orderService.ts
+- **Responsibility**: Business logic for order creation, submission, and validation.
+- **Functions**:
+  - `calculateCartTotal(items)` — Sums cart item prices
+  - `isOrderValid(order)` — Validates order completeness
+  - `generateOrderId()` — Creates unique order ID
+  - `createOrder(items)` — Creates a new order object
+  - `submitOrder(order)` — Submits order to backend
+- **No UI Dependencies**: Pure functions, testable without React.
+- **No Navigation**: Handled separately in hooks.
+- **Export**: Via `services/index.ts` (internal only).
+
+### services/menuService.ts
+- **Responsibility**: Business logic for menu operations (search, filter, sort).
+- **Functions**:
+  - `searchMenuItems(items, query)` — Filters by name/description
+  - `filterByPriceRange(items, min, max)` — Filters by price
+  - `sortMenuItems(items, sortBy, order)` — Sorts by name or price
+  - `findMenuItemById(items, itemId)` — Finds item by ID
+- **No UI Dependencies**: Pure utility functions.
+- **No State Management**: Accepts data, returns transformed data.
+- **Export**: Via `services/index.ts` (internal only).
+
+### data/menuConfig.ts
+- **Responsibility**: Static configuration and constants for the food domain.
+- **Exports**:
+  - `MENU_ITEMS` — Sample menu items
+  - `ORDER_STATUS_LABELS` — User-friendly status labels
+  - `MINIMUM_ORDER_VALUE` — Minimum order threshold
+  - `DELIVERY_FEE` — Delivery cost
+- **Static Data**: No API calls; would be replaced with API in production.
+- **Domain Constants**: All food-order specific configuration.
+- **Export**: Via `data/index.ts` (internal only).
 
 ### types.ts
 - **Single File**: All feature-specific types live here (never split into multiple type files).
 - **Scope**: Contains domain models (`FoodMenuItem`, `CartItem`, `FoodOrder`) and callback types.
-- **Usage**: Imported by screens, components, hooks, and public API.
+- **Usage**: Imported by screens, components, hooks, services, and public API.
 - **Export**: All types are re-exported via `index.ts`.
-
-### data/ (Future)
-- **Purpose**: Store feature-dependent constants and data (e.g., `MENU_DATA`, `ORDER_STATUSES`).
-- **Isolation**: Separate data by domain (avoid mixing unrelated business domains).
-- **Example**: Create `menuConfig.ts` for menu-related constants, `orderConfig.ts` for order logic.
+- **Examples**:
+  ```typescript
+  interface FoodMenuItem { id, name, description, price, icon }
+  interface CartItem { menuItem, quantity, addedAt }
+  interface FoodOrder { id, items, totalPrice, createdAt, status }
+  ```
 
 ### components/ (Future)
-- Will hold reusable UI components specific to food ordering (e.g., `MenuItem`, `CartSummary`).
-- Each component: single responsibility, locally typed, minimal prop drilling.
-- Exported via internal `index.ts` only; not part of public feature API.
+- **Purpose**: Reusable UI components specific to food ordering.
+- **Isolation**: Components are feature-private; not exported to other features.
+- **Single Responsibility**: Each component handles one concern.
+- **Typing**: Uses types from `../types.ts`.
+- **Examples**:
+  - `MenuItem.tsx` — Single menu item display+action
+  - `MenuList.tsx` — List of menu items
+  - `CartItem.tsx` — Cart item with quantity controls
+  - `CartSummary.tsx` — Order summary with total
 
 ## Dependency Rules
 
@@ -111,33 +159,53 @@ import SomeHomeComponent from 'src/features/home/components/...';  // Cross-feat
 ## Architecture Rules Applied
 
 ### 1. Layer Separation (Rule 1-3)
+- **Core** ← **Features** ← **Shared** (dependency direction)
 - Feature implements business logic without exposing internals.
 - Does not import from other features.
 - All external access routed through public API (`index.ts`).
+- Services layer handles pure business logic (no UI, no navigation).
+- Data layer holds constants and static configuration.
 
-### 2. Screen Composition (Rule 6)
+### 2. Internal Layer Structure
+- **screens/**: Composition-only (UI + hooks, no business logic)
+- **components/**: Reusable feature-private UI components
+- **hooks/**: Feature-specific React hooks (navigation, state)
+- **services/**: Pure business logic (order operations, menu filtering)
+- **data/**: Static constants and configuration
+- **types.ts**: Single file for all feature types
+
+### 3. Screen Composition (Rule 6)
 - `FoodOrderScreen` is composition-only.
-- All business logic (navigation) delegated to hooks.
+- All business logic (navigation, data fetching) delegated to hooks/services.
 - No `any` types; uses `RootStackParamList` for type safety.
+- Screens receive minimal props (only callbacks and styled data).
 
-### 3. Navigation Encapsulation (Rule 12, 14)
+### 4. Navigation Encapsulation (Rule 12)
 - Navigation logic wrapped in `useFoodOrderNavigation()` hook.
-- Components receive callbacks, not navigation objects.
-- No hardcoded route strings; uses centralized `core/navigation/config.ts`.
+- Screens call callbacks, not navigation directly.
+- Navigation never exposed to child components.
 
-### 4. Type Discipline (Rule 14)
+### 5. Business Logic Isolation (Rule 6, 15)
+- Order logic in `services/orderService.ts` (pure functions).
+- Menu logic in `services/menuService.ts` (pure functions).
+- Services are UI-free and testable without React.
+- Data transformations happen in services, not components.
+
+### 6. Type Discipline (Rule 14)
 - No `any` types anywhere in this feature.
 - All types live in single `types.ts`.
-- Navigation uses typed callbacks, not raw objects.
+- Services, hooks, and data fully typed.
+- Navigation callbacks typed via `FoodOrderNavigationCallbacks`.
 
-### 5. Styling (Rule 19-20)
-- Styles extracted to `FoodOrderScreen.styles.ts`.
+### 7. Styling (Rule 19-20)
+- Styles extracted to `*.styles.ts` files.
 - All colors/spacing/typography from `shared/theme/`.
 - No inline hardcoded values.
 
-### 6. Domain Separation (Rule 9-10)
-- Food order types (`FoodMenuItem`, `CartItem`, `FoodOrder`) clearly named.
-- Ready to extend into `data/` folder for domain-specific config.
+### 8. Domain Separation
+- Food order types, services, data live together.
+- Clear boundaries: order domain ≠ menu domain.
+- Data and services named by domain (e.g., `orderService`, `menuConfig`).
 
 ## Testing
 
