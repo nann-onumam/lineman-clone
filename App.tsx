@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // 1. Import หน้า FoodOrderScreen เข้ามา (ต้องสร้างไฟล์นี้ไว้ใน features ด้วยนะ)
-import HomeScreen from './src/features/home/screens/homeScreen';
+import { HomeScreen } from './src/features/home';
 import FoodOrderScreen from './src/features/food-order/screens/foodOrderScreen'; 
 
 const Stack = createStackNavigator();
