@@ -84,6 +84,63 @@ You've successfully run and modified your React Native App. :partying_face:
 - If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
 - If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
 
+# Architecture & Codebase Guidelines
+
+This project follows a **feature-based modular architecture** with strict layer separation and dependency rules. All developers must adhere to the following 25 mandatory rules to maintain code consistency and scalability.
+
+## Core Architecture Rules
+
+### Layer Structure (Rules 1-3)
+1. **Strict Layer Hierarchy**: Code must follow: `core/` → `features/` → `shared/`. Features cannot depend on other features (except via public API). Shared cannot depend on core or features.
+2. **No Circular Dependencies**: Tools run in CI/CD to detect and prevent circular imports (`scripts/check-cross-feature-imports.js`).
+3. **No Deep Imports**: Components outside a feature must import only from the feature's public API (`src/features/{feature}/index.ts`), never from internal paths.
+
+### Feature Module Structure (Rules 4-6)
+4. **Feature Folder Structure**: Every feature must have exactly: `components/`, `screens/`, `hooks/`, `types/`, `styles/`, `data/`, and `index.ts` (public API).
+5. **Public API Contract**: Feature's `index.ts` must export only: screens, types, and utilities safe for cross-feature use. Internal implementation (components, hooks) stays private.
+6. **Single Responsibility**: Each component/hook handles one concern. No god components. Extract reusable logic to hooks or utilities.
+
+### Shared Canvas (Rules 7-8)
+7. **Shared = Cross-Feature Primitives**: `shared/` contains only: `theme/` (colors, spacing, typography), `constants/`, `layouts/`, and `utils/`. No feature-specific logic.
+8. **No Feature Dependencies**: Shared modules must never import from `features/`. Shared is the foundation for all features.
+
+### Navigation & Type Safety (Rules 9-12)
+9. **Centralized Navigation Types**: All navigation types live in `src/core/navigation/types.ts` (e.g., `RootStackParamList`).
+10. **Type-Safe Navigation**: NavigatorStack must be parameterized with `RootStackParamList`. No raw `navigate: (screen: string)` signatures.
+11. **Navigation Configuration**: Route mappings live in `src/core/navigation/config.ts` (e.g., `MENU_ROUTE_MAP`). Navigation logic uses lookup functions, not hardcoded strings.
+12. **Root Hook Pattern**: Screens receive navigation via `useNavigation()` hook (from `@react-navigation/native`), not via props. Custom logic wraps navigation in feature-level hooks (e.g., `useHomeNavigation`).
+
+### Data Models & State (Rules 13-16)
+13. **Centralized Models**: Shared, feature-independent types live in `src/core/models/`. Feature-specific types live in `src/features/{feature}/types/`.
+14. **No Any Types**: TypeScript strict mode enforced. No `any` type without explicit `// @ts-expect-error` comment and justification.
+15. **Single Source of Truth**: Data fetching and mutation live in feature-level hooks (`useQuery`, `useMutation`), not in components.
+16. **Immutable State**: All state updates are immutable by default. Complex state uses Zustand or similar (if needed; currently using React Query).
+
+### Styling & Component Separation (Rules 17-20)
+17. **Colocation for Small Components**: Styles for components under 100 LOC live inline or in a colocated `.styles.ts` file.
+18. **Extracted Layouts**: Reusable larger layouts (over 100 LOC) go in `shared/layouts/`.
+19. **Theme Access**: Colors, spacing, and typography come from `shared/theme/`, never hardcoded (e.g., `const color = colors.primary`).
+20. **Naming Convention**: `styles.ts` (or `.styles.ts`) files export a default `StyleSheet` or object. No inline `StyleSheet.create()` in component files over 200 LOC.
+
+### Code Quality & Organization (Rules 21-25)
+21. **Eslint & Prettier**: All code must pass `npm run lint`. Auto-format with Prettier before commit.
+22. **TypeScript Strict Mode**: `tsconfig.json` has `strict: true`. All implementations must satisfy strict TypeScript checks.
+23. **Test Coverage**: Critical features (screens, hooks, utilities) must have unit tests in `__tests__/` folders. Run `npm test` before merging.
+24. **Documentation**: Every feature's `README.md` describes: responsibility, public API, internal modules, and dependency rules.
+25. **Git Hygiene**: Commits group related changes. Commit messages are descriptive (imperative mood). Feature branches are short-lived.
+
+## Audit Compliance
+
+Run these commands before committing:
+```bash
+npm run typecheck    # TypeScript strict mode check
+npm run lint         # ESLint code quality check
+npm test             # Run all tests
+npm run check:feature-imports  # Detect circular dependencies
+```
+
+All four must pass for code to merge to main.
+
 # Troubleshooting
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.

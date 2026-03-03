@@ -2,10 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { RootStackParamList } from './src/core/navigation';
 import { HomeScreen } from './src/features/home';
 import FoodOrderScreen from './src/features/food-order/screens/foodOrderScreen';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
 
 export default function App() {
