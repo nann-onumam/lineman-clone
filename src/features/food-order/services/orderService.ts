@@ -4,17 +4,30 @@
  * This service encapsulates all order-related operations.
  */
 
-import type { FoodOrder, CartItem } from '../types';
+import type { FoodOrder, CartItem, Dish } from '../types';
 
 /**
  * Calculates the total price of all items in a cart.
  * @param items - Array of cart items
+ * @param dishPriceMap - Map of dish IDs to prices (THB)
  * @returns Total price in currency units
  */
-export function calculateCartTotal(items: CartItem[]): number {
+export function calculateCartTotal(items: CartItem[], dishPriceMap: Record<string, number>): number {
   return items.reduce((total, item) => {
-    return total + item.menuItem.price * item.quantity;
+    const price = dishPriceMap[item.dishId] || 0;
+    return total + price * item.quantity;
   }, 0);
+}
+
+/**
+ * Alternative: Calculate total from dishes with cart items.
+ * @param items - Array of cart items
+ * @param dishes - Array of available dishes
+ * @returns Total price in currency units
+ */
+export function calculateCartTotalFromDishes(items: CartItem[], dishes: Dish[]): number {
+  const dishMap = new Map(dishes.map((d) => [d.id, d.priceTHB]));
+  return calculateCartTotal(items, Object.fromEntries(dishMap));
 }
 
 /**
@@ -37,15 +50,16 @@ export function generateOrderId(): string {
 }
 
 /**
- * Creates a new food order with the given items.
+ * Creates a new food order with the given items and total.
  * @param items - Array of cart items
+ * @param totalPrice - Pre-calculated total price
  * @returns A new FoodOrder object
  */
-export function createOrder(items: CartItem[]): FoodOrder {
+export function createOrder(items: CartItem[], totalPrice: number): FoodOrder {
   return {
     id: generateOrderId(),
     items,
-    totalPrice: calculateCartTotal(items),
+    totalPrice,
     createdAt: new Date(),
     status: 'pending',
   };
