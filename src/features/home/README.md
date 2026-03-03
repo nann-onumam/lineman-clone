@@ -15,6 +15,7 @@
 - `components/homeHeader.tsx` — green location header with current location name.
 - `components/homeMenuGrid.tsx` — service card grid.
 - `components/bottomNav.tsx` — bottom quick-access navigation.
+- `components/nearbyMapCard.tsx` — **DEPRECATED** compatibility shim (returns null). Exists only for Metro cache compatibility. Do not use in new code.
 - `data/menuData.ts` — menu/footer constants for home rendering.
 - `data/locationData.ts` — local location seed + async fetch mock.
 - `hooks/useHomeLocationQuery.ts` — react-query wrapper for location data.
