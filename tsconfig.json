@@ -1,15 +1,35 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest"],
-    "baseUrl": ".", 
+    "types": [
+      "jest"
+    ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@core/*": ["src/core/*"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"]
-    }
+      "@/*": [
+        "src/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ]
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/Pods"
+  ]
 }
