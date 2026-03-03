@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "ci": "npm run typecheck && npm run lint && npm run test"
+    "ci": "npm run typecheck && npm run lint && npm run test",
+    "check:feature-imports": "node scripts/check-cross-feature-imports.js"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.84.1",
@@ -33,9 +34,9 @@
     "@types/jest": "^29.5.13",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",
-        "babel-plugin-module-resolver": "^5.0.2"
-      },
-      "jest": {
-        "preset": "react-native"
-      }
-    }
+    "babel-plugin-module-resolver": "^5.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
