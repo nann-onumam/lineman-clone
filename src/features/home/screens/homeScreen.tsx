@@ -1,10 +1,13 @@
 // src/features/home/screens/HomeScreen.tsx
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { MENU_DATA, FOOTER_DATA } from '../../../shared/constants/MenuData';
 import AppLayout from '../../../shared/layouts/AppLayout';
+import useHomeNavigation from '../hooks/useHomeNavigation';
 
 export default function HomeScreen({ navigation }: any) {
+  const { onMenuPress, onFooterPress } = useHomeNavigation(navigation);
+
   return (
     <AppLayout style={styles.container}>
       <ScrollView>
@@ -17,7 +20,7 @@ export default function HomeScreen({ navigation }: any) {
             <TouchableOpacity
               key={item.id}
               style={styles.menuBox}
-              onPress={() => item.id === 1 ? navigation.navigate('FoodOrder') : Alert.alert(item.title)}
+              onPress={() => onMenuPress(item.id, item.title)}
             >
               <Text>{item.icon} {item.title}</Text>
             </TouchableOpacity>
@@ -27,7 +30,7 @@ export default function HomeScreen({ navigation }: any) {
 
       <View style={styles.bottomNav}>
         {FOOTER_DATA.map((item) => (
-          <TouchableOpacity key={item.id} onPress={() => Alert.alert(item.title)}>
+          <TouchableOpacity key={item.id} onPress={() => onFooterPress(item.title)}>
             <Text>{item.icon} {item.title}</Text>
           </TouchableOpacity>
         ))}
