@@ -1,45 +1,28 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// App.tsx
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+// 1. Import หน้า FoodOrderScreen เข้ามา (ต้องสร้างไฟล์นี้ไว้ใน features ด้วยนะ)
+import HomeScreen from './src/features/home/screens/homeScreen';
+import FoodOrderScreen from './src/features/food-order/screens/foodOrderScreen'; 
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const Stack = createStackNavigator();
 
+export default function App() {
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* หน้าแรก */}
+        <Stack.Screen name="Home" component={HomeScreen} />
+        
+        {/* 2. เพิ่มหน้า FoodOrder ลงในสารบัญ เพื่อให้ระบบหาเจอเวลาเราสั่ง navigate */}
+        <Stack.Screen 
+          name="FoodOrder" 
+          component={FoodOrderScreen} 
+          options={{ headerShown: true, title: 'สั่งอาหาร' }} 
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;
