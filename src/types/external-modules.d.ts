@@ -19,23 +19,6 @@ declare module '@tanstack/react-query' {
   };
 }
 
-declare module 'react-native-maps' {
-  import type { ComponentType } from 'react';
-
-  export type Region = {
-    latitude: number;
-    longitude: number;
-    latitudeDelta: number;
-    longitudeDelta: number;
-  };
-
-  export const PROVIDER_GOOGLE: string;
-
-  const MapView: ComponentType<any>;
-  export const Marker: ComponentType<any>;
-  export default MapView;
-}
-
 declare module 'lodash.debounce' {
   type DebouncedFunction<T extends (...args: any[]) => any> = ((...args: Parameters<T>) => void) & {
     cancel: () => void;

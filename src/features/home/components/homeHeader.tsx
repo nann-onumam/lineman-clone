@@ -7,12 +7,14 @@ import LocationSearchInput from './locationSearchInput';
 
 type HomeHeaderProps = {
   selectedLocation: HomeLocation | undefined;
+  selectedAddress: string;
   searchKeyword: string;
   onChangeKeyword: (value: string) => void;
 };
 
 export default function HomeHeader({
   selectedLocation,
+  selectedAddress,
   searchKeyword,
   onChangeKeyword,
 }: HomeHeaderProps) {
@@ -21,7 +23,8 @@ export default function HomeHeader({
       <Text style={styles.headerText}>
         📍 {selectedLocation?.name ?? 'กำลังโหลดตำแหน่ง...'}
       </Text>
-      <Text style={styles.addressHint}>{selectedLocation?.addressHint ?? ''}</Text>
+      <Text style={styles.addressHint}>{selectedAddress}</Text>
+      <Text style={styles.addressHint}>{selectedAddress ?? ''}</Text>
       <LocationSearchInput value={searchKeyword} onChangeText={onChangeKeyword} />
     </View>
   );

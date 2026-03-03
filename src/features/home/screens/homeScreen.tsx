@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import React, { useMemo } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import AppLayout from '../../../shared/layouts/AppLayout';
 import useHomeNavigation from '../hooks/useHomeNavigation';
 import BottomNav from '../components/bottomNav';
 import HomeMenuGrid from '../components/homeMenuGrid';
 import HomeHeader from '../components/homeHeader';
-import NearbyMapCard from '../components/nearbyMapCard';
+import NearbyLocationList from '../components/nearbyMapCard';
 import useDebouncedKeyword from '../hooks/useDebouncedKeyword';
 import useHomeLocationQuery from '../hooks/useHomeLocationQuery';
 
@@ -18,26 +18,31 @@ type HomeScreenProps = {
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { onMenuPress, onFooterPress } = useHomeNavigation(navigation);
 
-  const { keyword, setKeyword, debouncedKeyword } = useDebouncedKeyword(400);
-  const { data: locations = [], isLoading, isFetching } = useHomeLocationQuery(debouncedKeyword);
+  const { keyword, setKeyword } = useDebouncedKeyword(400);
+  const { data: locations = [], isLoading } = useHomeLocationQuery(keyword);
+
+  const headerAddress = useMemo(() => {
+    return locations[0]?.addressHint ?? '';
+  }, [locations]);
 
   return (
     <AppLayout style={styles.container}>
       <ScrollView>
         <HomeHeader
           selectedLocation={locations[0]}
+          selectedAddress={headerAddress}
           searchKeyword={keyword}
           onChangeKeyword={setKeyword}
         />
 
-        {(isLoading || isFetching) && (
+        {isLoading && (
           <View style={styles.loadingArea}>
-            <ActivityIndicator color="#00c300" />
             <Text style={styles.loadingText}>กำลังอัปเดตพื้นที่ให้บริการ...</Text>
           </View>
         )}
 
-        <NearbyMapCard locations={locations} />
+        <NearbyLocationList locations={locations} />
+
         <HomeMenuGrid onPressItem={onMenuPress} />
       </ScrollView>
 
@@ -47,15 +52,17 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   loadingArea: {
-    flexDirection: 'row',
+    paddingVertical: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 12,
   },
   loadingText: {
-    marginLeft: 8,
-    color: '#4b5563',
+    marginTop: 8,
+    color: '#666',
+    fontSize: 14,
   },
 });

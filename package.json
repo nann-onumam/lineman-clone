@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest",
+    "test": "npx jest",
     "typecheck": "tsc --noEmit",
     "ci": "npm run typecheck && npm run lint && npm run test",
     "check:feature-imports": "node scripts/check-cross-feature-imports.js"
@@ -20,7 +20,6 @@
     "react": "19.2.3",
     "react-native": "0.84.1",
     "react-native-gesture-handler": "^2.30.0",
-    "react-native-maps": "^1.27.1",
     "react-native-safe-area-context": "^5.7.0",
     "react-native-screens": "^4.24.0"
   },

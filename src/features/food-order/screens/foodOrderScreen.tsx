@@ -2,6 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function FoodOrderScreen({ navigation }: any) {
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>หน้าสั่งอาหาร 🍔</Text>
@@ -9,7 +18,7 @@ export default function FoodOrderScreen({ navigation }: any) {
       
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => navigation.goBack()}
+        onPress={handleBackPress}
       >
         <Text style={styles.buttonText}>กลับหน้าหลัก</Text>
       </TouchableOpacity>
